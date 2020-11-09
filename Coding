@@ -1,5 +1,4 @@
-Dear K’Kanittha (Keyence)
-                
+
 Code VB function search view control ครับ
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 Private Function BtSearchViewControl_1_Create() As BtSearchViewMasterControl
