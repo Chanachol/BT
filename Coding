@@ -1,0 +1,66 @@
+Dear K’Kanittha (Keyence)
+                
+Code VB function search view control ครับ
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Private Function BtSearchViewControl_1_Create() As BtSearchViewMasterControl
+        Dim conditionItems As List(Of SearchViewConditionItem) = New List(Of SearchViewConditionItem)()
+        Dim displayItems As List(Of SearchViewDisplayItem) = New List(Of SearchViewDisplayItem)()
+
+        Dim conditionItem1 As SearchViewConditionItem = New SearchViewConditionItem("field1", BtTextBox_1)
+        conditionItem1.OutputRangeType = OutputRangeType.Range
+        conditionItem1.OutputRangeStart = 1
+        conditionItem1.OutputRangeEnd = 5
+        conditionItem1.ExclusionCharacters = ExclusionCharacters.None
+        conditionItems.Add(conditionItem1)
+
+        Dim displayItem1 As SearchViewDisplayItem = New SearchViewDisplayItem("field2", BtLabel_1, 0)
+        displayItem1.OutputRangeType = OutputRangeType.None
+        displayItems.Add(displayItem1)
+
+        Dim BtSearchViewControl_1 As BtSearchViewMasterControl = New BtSearchViewMasterControl()
+        BtSearchViewControl_1.Initialize(conditionItems, displayItems, StorageDestination.Drive1, "MasterFile_1.htdat", True, DataLocation.Local)
+        BtSearchViewControl_1.MaxDataCount = 100
+        BtSearchViewControl_1.CommunicationErrorDisplayMode = CommunicationErrorDisplayMode.TerminalSetting
+
+        Return BtSearchViewControl_1
+    End Function
+
+    Private Function BtSearchViewControl_1_ReferData() As Boolean
+        Dim btSearchViewMasterControl As BtSearchViewMasterControl = BtSearchViewControl_1_Create()
+        btSearchViewMasterControl.Execute()
+        Dim errorMessage As String = ErrorManager.GetError()
+        If ErrorManager.GetCommunicationError() Then
+            Using communicationErrorScreen As New BtCommunicationErrorDialog_1()
+                communicationErrorScreen.ShowDialog()
+            End Using
+            Return False
+        Else
+            If errorMessage <> MessageResources.ERROR_NONE Then
+                MessageUtility.ShowMessage(errorMessage)
+                Return False
+            End If
+        End If
+        Return True
+    End Function
+
+    Private Function BtSearchViewControl_1_Reset() As Boolean
+        Dim btSearchViewMasterControl As BtSearchViewMasterControl = BtSearchViewControl_1_Create()
+        btSearchViewMasterControl.ResetDisplayControls()
+    End Function
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ผมต้องการทราบว่า แต่ละ private function มีความหมายว่ายังไงครับ
+และถ้าต้องการนำมาเรียกใช้เองใน user defined ต้องเขียนลักษณะแบบไหนครับ
+
+ปัญหาคือว่า function Search View Control ต้อง fix digit  เพื่อนำไปจับคู่ใน Masterfile แต่หน้างานไม่สามารถ fix digit ได้ครับ
+ตอนนี้ผมเลยแบ่งข้อมูลที่มาจาก input เป็น array แล้วค่อยนำมาใช้ต่อครับ
+ตัวอย่าง code array split
+-------------------------------------------------------------------------
+Dim str As String = BtTextBox_2.text
+        Dim items() As String = str.Split(","c)
+        Dim list As New List(Of String)
+        For i As Integer = 0 To items.Length - 1
+            ITEMLABER.Text = items(0)
+            dateinput.Text = items(1)
+        Next i
+--------------------------------------------------------------------------------
+
